@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('customers', function () {
-    return response()->json();
+    return response()->json(\App\Models\Customer::query()->get());
 });
 Route::post('customers', function () {});
 Route::get('customers/{customer_id}', function () {});
