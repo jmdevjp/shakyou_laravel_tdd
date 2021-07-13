@@ -22,7 +22,8 @@ class ReportFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'visit_date' => $this->faker->date(),
+            'detail' => $this->faker->realText(),
         ];
     }
 }

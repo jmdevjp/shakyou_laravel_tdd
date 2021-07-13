@@ -15,7 +15,11 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->date('visit_date');
+            $table->bigInteger('customer_id', false, true);
+            $table->text('detail');
             $table->timestamps();
+            $table->foreign('customer_id')->references('id')->on('customers');
         });
     }
 
