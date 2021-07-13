@@ -125,4 +125,13 @@ class ReportTest extends TestCase
         $customer = $customers[0];
         $this->assertSame(['id', 'name'], array_keys($customer));
     }
+
+    /**
+     * @test
+     */
+    public function api_customersにGETメソッドでアクセスすると2件の顧客リストが返却される()
+    {
+        $response = $this->get('api/customers');
+        $response->assertJsonCount(2);
+    }
 }
