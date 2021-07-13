@@ -105,4 +105,13 @@ class ReportTest extends TestCase
         $response = $this->delete('api/reports/1');
         $response->assertStatus(200);
     }
+
+    /**
+     * @test
+     */
+    public function api_customersにGETメソッドでアクセスするとJSONが返却される()
+    {
+        $response = $this->get('api/customers');
+        $this->assertThat($response->content(), $this->isJson());
+    }
 }
