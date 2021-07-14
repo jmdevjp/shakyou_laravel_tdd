@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Customer;
+use App\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -76,10 +76,60 @@ class ReportTest extends TestCase
     /**
      * @test
      */
+    public function api_reportsにGETメソッドでアクセスするとJSONが返却される()
+    {
+        $response = $this->get('api/reports');
+        $this->assertThat($response->content(), $this->isJson());
+    }
+
+    /**
+     * @test
+     */
+    public function api_reportsにGETメソッドで取得できる訪問記録のJSON形式は要件通りである()
+    {
+        $response = $this->get('api/reports');
+        $reports = $response->json();
+        $report = $reports[0];
+        $this->assertSame(['id', 'visit_date', 'customer_id', 'detail'], array_keys($report));
+    }
+
+    /**
+     * @test
+     */
+    public function api_reportsにGETメソッドでアクセスすると4件の訪問記録リストが返却される()
+    {
+        $response = $this->get('api/reports');
+        $response->assertJsonCount(4);
+    }
+
+    /**
+     * @test
+     */
     public function api_reportsにPOSTメソッドでアクセスできる()
     {
-        $response = $this->post('api/reports');
+        $customer_id = Customer::all()[0]->id;
+        $params = [
+            'visit_date' => '2021-01-01',
+            'customer_id' => $customer_id,
+            'detail' => '詳細',
+        ];
+        $response = $this->postJson('api/reports', $params);
         $response->assertStatus(200);
+    }
+
+    /**
+     * @test
+     */
+    public function api_reportsに訪問記録をPOSTするとreportsテーブルにそのデータが追加される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $params = [
+            'visit_date' => '2021-07-14',
+            'customer_id' => $customer_id,
+            'detail' => '今後のコンソールの扱いについてのミーティング。次回は2週間後',
+        ];
+        $this->postJson('api/reports', $params);
+        $this->assertDatabaseHas('reports', $params);
     }
 
     /**
