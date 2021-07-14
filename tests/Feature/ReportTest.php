@@ -171,4 +171,24 @@ class ReportTest extends TestCase
         $response = $this->postJson('api/customers', $params);
         $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
     }
+
+    /**
+     * @test
+     */
+    public function POST_api_customersのエラーレスポンスの確認()
+    {
+        $params = [
+            'name' => '',
+        ];
+        $response = $this->postJson('api/customers', $params);
+        $error_response = [
+            'message' => 'The given data was invalid.',
+            'errors' => [
+                'name' => [
+                    'name は必須項目です',
+                ]
+            ],
+        ];
+        $response->assertExactJson($error_response);
+    }
 }

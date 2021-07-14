@@ -14,10 +14,11 @@ class ApiController extends Controller
 
     public function postCustomers(Request $request)
     {
-        if (!$request->json('name')) {
-            return response()
-                ->make('', \Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->validate(
+            $request,
+            ['name' => 'required'],
+            ['name.required' => ':attribute は必須項目です']
+        );
         $customer = new \App\Models\Customer();
         $customer->name = $request->json('name');
         $customer->save();
