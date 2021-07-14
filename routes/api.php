@@ -29,6 +29,10 @@ Route::get('reports', function () {
     return response()->json(\App\Models\Report::query()->select(['id', 'visit_date', 'customer_id', 'detail'])->get());
 });
 Route::post('reports', function (\Illuminate\Http\Request $request) {
+    if (!$request->json('visit_date') || !$request->json('customer_id') || !$request->json('detail')) {
+        return response()
+            ->make('', \Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
     $report = new Report();
     $report->visit_date = $request->json('visit_date');
     $report->customer_id = $request->json('customer_id');

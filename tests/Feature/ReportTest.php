@@ -135,6 +135,95 @@ class ReportTest extends TestCase
     /**
      * @test
      */
+    public function api_reportsに訪問日が含まれない場合422UnprocessableEntityが返却される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $params = [
+            /*'visit_date' => '2021-07-14',*/
+            'customer_id' => $customer_id,
+            'detail' => '詳細',
+        ];
+        $response = $this->postJson('api/reports', $params);
+        $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @test
+     */
+    public function api_reportsに顧客番号が含まれない場合422UnprocessableEntityが返却される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $params = [
+            'visit_date' => '2021-07-14',
+            /*'customer_id' => $customer_id,*/
+            'detail' => '詳細',
+        ];
+        $response = $this->postJson('api/reports', $params);
+        $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @test
+     */
+    public function api_reportsに詳細が含まれない場合422UnprocessableEntityが返却される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $params = [
+            'visit_date' => '2021-07-14',
+            'customer_id' => $customer_id,
+            /*'detail' => '詳細',*/
+        ];
+        $response = $this->postJson('api/reports', $params);
+        $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @test
+     */
+    public function api_reportsに訪問日が空の場合422UnprocessableEntityが返却される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $params = [
+            'visit_date' => '',
+            'customer_id' => $customer_id,
+            'detail' => '詳細',
+        ];
+        $response = $this->postJson('api/reports', $params);
+        $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @test
+     */
+    public function api_reportsに顧客番号が空の場合422UnprocessableEntityが返却される()
+    {
+        $params = [
+            'visit_date' => '2021-07-14',
+            'customer_id' => 0,
+            'detail' => '詳細',
+        ];
+        $response = $this->postJson('api/reports', $params);
+        $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @test
+     */
+    public function api_reportsに詳細が空の場合422UnprocessableEntityが返却される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $params = [
+            'visit_date' => '2021-07-14',
+            'customer_id' => $customer_id,
+            'detail' => '',
+        ];
+        $response = $this->postJson('api/reports', $params);
+        $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @test
+     */
     public function api_reports_report_idにGETメソッドでアクセスできる()
     {
         $response = $this->get('api/reports/1');
