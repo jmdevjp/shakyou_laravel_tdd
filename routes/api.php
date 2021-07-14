@@ -21,7 +21,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('customers', function () {
     return response()->json(\App\Models\Customer::query()->select(['id', 'name'])->get());
 });
-Route::post('customers', function () {});
+
+Route::post('customers', function (\Illuminate\Http\Request $request) {
+    // validation仮実装
+    if (!$request->json('name')) {
+        return response()
+            ->make('', \Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+    $customer = new \App\Models\Customer();
+    $customer->name = $request->json('name');
+    $customer->save();
+});
+
 Route::get('customers/{customer_id}', function () {});
 Route::put('customers/{customer_id}', function () {});
 Route::delete('customers/{customer_id}', function () {});

@@ -30,7 +30,10 @@ class ReportTest extends TestCase
      */
     public function api_customersにPOSTメソッドでアクセスできる()
     {
-        $response = $this->post('api/customers');
+        $customer = [
+            'name' => 'customer_name',
+        ];
+        $response = $this->postJson('api/customers', $customer);
         $response->assertStatus(200);
     }
 
@@ -133,5 +136,39 @@ class ReportTest extends TestCase
     {
         $response = $this->get('api/customers');
         $response->assertJsonCount(2);
+    }
+
+    /**
+     * @test
+     */
+    public function api_customersに顧客名をPOSTするとcustomerテーブルにそのデータが追加される()
+    {
+        $params = [
+            'name' => '顧客名',
+        ];
+        $this->postJson('api/customers', $params);
+        $this->assertDatabaseHas('customers', $params);
+    }
+
+    /**
+     * @test
+     */
+    public function api_customersにnameが含まれない場合422UnprocessableEntityが返却される()
+    {
+        $params = [];
+        $response = $this->postJson('api/customers', $params);
+        $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @test
+     */
+    public function api_customersにnameが空の場合422UnprocessableEntityが返却される()
+    {
+        $params = [
+            'name' => '',
+        ];
+        $response = $this->postJson('api/customers', $params);
+        $response->assertStatus(\Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }
