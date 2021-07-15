@@ -61,6 +61,16 @@ class ReportTest extends TestCase
     /**
      * @test
      */
+    public function api_customers_customer_idにGETメソッドでアクセスすると1件のJSONが返却される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $response = $this->get('api/customers/' . $customer_id);
+        $response->assertJsonCount(1);
+    }
+
+    /**
+     * @test
+     */
     public function api_customers_customer_idにGETメソッドで取得できる顧客情報のJSON形式は要件通りである()
     {
         $customer_id = Customer::all()[0]->id;
