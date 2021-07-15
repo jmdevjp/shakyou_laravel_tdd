@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Customer;
+use App\Models\Report;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -249,8 +250,41 @@ class ReportTest extends TestCase
      */
     public function api_reports_report_idにGETメソッドでアクセスできる()
     {
-        $response = $this->get('api/reports/1');
+        $report_id = Report::all()[0]->id;
+        $response = $this->get('api/reports/' . $report_id);
         $response->assertStatus(200);
+    }
+
+    /**
+     * @test
+     */
+    public function api_reports_report_idにGETメソッドでアクセスするとJSONが返却される()
+    {
+        $report_id = Report::all()[0]->id;
+        $response = $this->get('api/reports/' . $report_id);
+        $this->assertThat($response->content(), $this->isJson());
+    }
+
+    /**
+     * @test
+     */
+    public function api_reports_report_idにGETメソッドでアクセスすると1件のJSONが返却される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $response = $this->get('api/customers/' . $customer_id);
+        $response->assertJsonCount(1);
+    }
+
+    /**
+     * @test
+     */
+    public function api_reports_report_idにGETメソッドで取得できる訪問記録のJSON形式は要件通りである()
+    {
+        $report_id = Report::all()[0]->id;
+        $response = $this->get('api/reports/' . $report_id);
+        $reports = $response->json();
+        $report = $reports[0];
+        $this->assertSame(['id', 'visit_date', 'customer_id', 'detail'], array_keys($report));
     }
 
     /**

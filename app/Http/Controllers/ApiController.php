@@ -53,8 +53,9 @@ class ApiController extends Controller
         $customerService->addReport($visit_date, $customer_id, $detail);
     }
 
-    public function getReport()
+    public function getReport(CustomerService $customerService, $report_id): \Illuminate\Http\JsonResponse
     {
+        return response()->json($customerService->getReport($report_id));
     }
 
     public function putReport()

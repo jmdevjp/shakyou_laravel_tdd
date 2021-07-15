@@ -39,4 +39,12 @@ class CustomerService
         $report->detail = $detail;
         $report->save();
     }
+
+    public function getReport($report_id)
+    {
+        return Report::query()
+            ->select(['id', 'visit_date', 'customer_id', 'detail'])
+            ->where(['id' => $report_id])
+            ->get();
+    }
 }
