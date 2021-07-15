@@ -42,8 +42,31 @@ class ReportTest extends TestCase
      */
     public function api_customers_customer_idにGETメソッドでアクセスできる()
     {
-        $response = $this->get('api/customers/1');
+        $customer_id = Customer::all()[0]->id;
+        $response = $this->get('api/customers/' . $customer_id);
         $response->assertStatus(200);
+    }
+
+    /**
+     * @test
+     */
+    public function api_customers_customer_idにGETメソッドでアクセスするとJSONが返却される()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $response = $this->get('api/customers/' . $customer_id);
+        $this->assertThat($response->content(), $this->isJson());
+    }
+
+    /**
+     * @test
+     */
+    public function api_customers_customer_idにGETメソッドで取得できる顧客情報のJSON形式は要件通りである()
+    {
+        $customer_id = Customer::all()[0]->id;
+        $response = $this->get('api/customers/' . $customer_id);
+        $customers = $response->json();
+        $customer = $customers[0];
+        $this->assertSame(['id', 'name'], array_keys($customer));
     }
 
     /**

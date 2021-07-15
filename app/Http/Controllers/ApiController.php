@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Report;
 use App\Services\CustomerService;
 use Illuminate\Http\Request;
 
@@ -19,8 +18,9 @@ class ApiController extends Controller
         $customerService->addCustomer($request->json('name'));
     }
 
-    public function getCustomer()
+    public function getCustomer(CustomerService $customerService, $customer_id): \Illuminate\Http\JsonResponse
     {
+        return response()->json($customerService->getCustomer($customer_id));
     }
 
     public function putCustomer()

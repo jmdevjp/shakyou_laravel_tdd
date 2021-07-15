@@ -12,6 +12,11 @@ class CustomerService
         return Customer::query()->select(['id', 'name'])->get();
     }
 
+    public function getCustomer($customer_id)
+    {
+        return Customer::find($customer_id)->select(['id', 'name'])->get();
+    }
+
     public function addCustomer($name)
     {
         $customer = new Customer();
