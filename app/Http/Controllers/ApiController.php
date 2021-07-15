@@ -31,16 +31,12 @@ class ApiController extends Controller
     {
     }
 
-    public function getReports(): \Illuminate\Http\JsonResponse
+    public function getReports(CustomerService $customerService): \Illuminate\Http\JsonResponse
     {
-        return response()->json(
-            \App\Models\Report::query()
-            ->select(['id', 'visit_date', 'customer_id', 'detail'])
-            ->get()
-        );
+        return response()->json($customerService->getReports());
     }
 
-    public function postReport(Request $request)
+    public function postReport(Request $request, CustomerService $customerService)
     {
         $this->validate(
             $request,
@@ -51,11 +47,10 @@ class ApiController extends Controller
             ]
         );
 
-        $report = new Report();
-        $report->visit_date = $request->json('visit_date');
-        $report->customer_id = $request->json('customer_id');
-        $report->detail = $request->json('detail');
-        $report->save();
+        $visit_date = $request->json('visit_date');
+        $customer_id = $request->json('customer_id');
+        $detail = $request->json('detail');
+        $customerService->addReport($visit_date, $customer_id, $detail);
     }
 
     public function getReport()
