@@ -195,11 +195,11 @@ class ReportTest extends TestCase
     /**
      * @test
      */
-    public function api_reportsに顧客番号が空の場合422UnprocessableEntityが返却される()
+    public function api_reportsに顧客番号が10桁を超える場合422UnprocessableEntityが返却される()
     {
         $params = [
             'visit_date' => '2021-07-14',
-            'customer_id' => 0,
+            'customer_id' => 10000000000,
             'detail' => '詳細',
         ];
         $response = $this->postJson('api/reports', $params);

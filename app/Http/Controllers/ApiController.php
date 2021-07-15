@@ -42,10 +42,15 @@ class ApiController extends Controller
 
     public function postReport(Request $request)
     {
-        if (!$request->json('visit_date') || !$request->json('customer_id') || !$request->json('detail')) {
-            return response()
-                ->make('', \Illuminate\Http\Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->validate(
+            $request,
+            [
+                'visit_date' => 'required',
+                'customer_id' => 'required|digits_between:1,10',
+                'detail' => 'required',
+            ]
+        );
+
         $report = new Report();
         $report->visit_date = $request->json('visit_date');
         $report->customer_id = $request->json('customer_id');
